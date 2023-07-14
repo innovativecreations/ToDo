@@ -118,5 +118,5 @@ app.post("/delete", (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, ()=>{
-conole.log("Server is on");
+console.log("Server is on");
 });
