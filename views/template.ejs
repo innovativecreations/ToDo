@@ -1,0 +1,28 @@
+<%- include("header") -%>
+    <div id="heading" class="box">
+
+        <h1>
+            <%= listKaNaam %>
+        </h1>
+    </div>
+    <div class="box">
+
+        <% kaam.forEach((chhotaKaam)=>{ %>
+            <form action="/delete" method="post">
+                <div class="item">
+                    <input type="checkbox" name="checkBox" value= <%=chhotaKaam._id %> onChange="this.form.submit()">
+                    <p>
+                        <%= chhotaKaam.name %>
+                    </p>
+                    <input type="hidden" name="rasta" value=<%= listKaNaam%>>
+                </div>
+            </form>
+            <% } );%>
+    </div>
+    <div class="box">
+        <form class="item" action="/" method="post">
+            <input type="text" name="kaam" placeholder="Add New Task" autocomplete="off">
+            <button type="submit" name="add" value=<%= listKaNaam %> >+</button>
+        </form>
+    </div>
+    <%- include("footer") -%>
