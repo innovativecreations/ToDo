@@ -34,7 +34,7 @@ h1 {
   border-bottom: 0;
 }
 
-input:checked+p {
+input:checked+ div>p {
   text-decoration: line-through;
   text-decoration-color: #A683E3;
 }
@@ -56,7 +56,19 @@ form.item {
   margin-left: 20px;
 }
 
-button {
+.delete{
+  border-color: transparent;
+  background-color: transparent;
+  margin-right: 20px;
+}
+.d-flex{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+button.add {
   min-height: 50px;
   width: 50px;
   border-radius: 50%;

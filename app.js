@@ -3,9 +3,11 @@ const bodyParser = require("body-parser");
 const day = require(__dirname + "/day.js");
 const mongoose = require("mongoose");
 const _ = require("lodash");
+const alert = require('alert'); 
 
-
-mongoose.connect("mongodb+srv://todo:todo@cluster0.rvuamjj.mongodb.net/todo");
+const uri = process.env.URI;
+console.log(process.env);
+mongoose.connect(uri);
 
 const todoSchema = new mongoose.Schema({
   name: String,
@@ -39,7 +41,6 @@ app.use(express.static("public"));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.get("/", (req, res) => {
   // const din = day.dateChahia();
   Todo.find({}).then((foundItems) => {
@@ -53,29 +54,45 @@ app.get("/", (req, res) => {
         });
       res.redirect("/");
     } else {
-      res.render("template", { listKaNaam: "Today", kaam: foundItems , rasta: "Today"});
+      res.render("template", {
+        listKaNaam: "Today",
+        kaam: foundItems,
+        rasta: "Today",
+      });
     }
   });
 });
 
+
+
 app.post("/", (req, res) => {
   const kaam = req.body.kaam;
   const rasta = req.body.add;
-  const kaamDB = new Todo({
-    name: kaam,
-  });
-  if(rasta === "Today"){
-
-  kaamDB.save();
-  res.redirect("/");
-}
-else{
-  NayaList.findOne({name: rasta}).then((data)=>{
-    data.todo.push(kaamDB);
-    data.save();
-    res.redirect("/"+rasta);
-  })
-}
+  function isEmptyOrSpaces(str){
+    return str === null || str.match(/^ *$/) !== null;
+  }
+  if (isEmptyOrSpaces(kaam)) {
+    alert("Please re-check the imput, it seems kinda void");
+    if (rasta === "Today") {
+      res.redirect("/");
+    }
+    else{
+    res.redirect("/" + rasta);}
+  } else {
+    const kaamDB = new Todo({
+      name: kaam,
+    });
+    if (rasta === "Today") {
+      kaamDB.save();
+      res.redirect("/");
+    } else {
+      NayaList.findOne({ name: rasta }).then((data) => {
+        data.todo.push(kaamDB);
+        data.save();
+        res.redirect("/" + rasta);
+      });
+    }
+  }
 });
 
 app.get("/:newList", (req, res) => {
@@ -89,13 +106,12 @@ app.get("/:newList", (req, res) => {
           todo: works,
         });
         nayaList.save();
-        res.redirect("/"+nayaListKaNaam);
+        res.redirect("/" + nayaListKaNaam);
       } else {
         // console.log(data);
         console.log("exists");
-        res.render("template", { listKaNaam: data.name, kaam: data.todo});
+        res.render("template", { listKaNaam: data.name, kaam: data.todo });
       }
-      
     })
     .catch((err) => {
       console.log(err);
@@ -103,20 +119,21 @@ app.get("/:newList", (req, res) => {
 });
 
 app.post("/delete", (req, res) => {
-  const kaam = req.body.checkBox;
+  const kaam = req.body.delete;
   const rasta = req.body.rasta;
-  if(rasta === "Today"){
-  Todo.findByIdAndRemove(kaam).then(() => {
-    console.log("deleted");
-    res.redirect("/");
-  });}
-  else{
-    NayaList.findOneAndUpdate({name: rasta}, {$pull:{todo:{_id: kaam}}}).then(()=>{
-      res.redirect("/"+rasta);
-    })
+  if (rasta === "Today") {
+    Todo.findByIdAndRemove(kaam).then(() => {
+      console.log("deleted");
+      res.redirect("/");
+    });
+  } else {
+    NayaList.findOneAndUpdate(
+      { name: rasta },
+      { $pull: { todo: { _id: kaam } } }
+    ).then(() => {
+      res.redirect("/" + rasta);
+    });
   }
 });
 
-app.listen(process.env.PORT || 3000, ()=>{
-console.log("Server is on");
-});
+app.listen(3000);
