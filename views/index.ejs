@@ -20,7 +20,12 @@
             <input type="hidden" name="taskTitle" value="<%= task.title %>">
             <input type="checkbox" name="completed" onchange="this.form.submit()" <%= task.completed ? 'checked' : '' %>>
           </form>
-          <span class="task <%= task.completed ? 'completed' : '' %>" onclick="toggleSubtasks(this)"><%= task.title %></span>
+          <span class="task <%= task.completed ? 'completed' : '' %>" onclick="toggleSubtasks(this)">
+            <% if (task.subtasks && task.subtasks.length > 0) { %>
+              <span class="caret closed"></span>
+            <% } %>
+            <%= task.title %>
+          </span>
           <% if (task.subtasks && task.subtasks.length > 0) { %>
             <ul class="subtasks">
               <% task.subtasks.forEach(function(subtask) { %>
@@ -46,9 +51,14 @@
   </div>
   <script>
     function toggleSubtasks(taskElement) {
+      const caret = taskElement.querySelector('.caret');
       const subtasksList = taskElement.nextElementSibling;
       if (subtasksList) {
         subtasksList.style.display = subtasksList.style.display === 'none' ? 'block' : 'none';
+        if (caret) {
+          caret.classList.toggle('closed');
+          caret.classList.toggle('open');
+        }
       }
     }
 
