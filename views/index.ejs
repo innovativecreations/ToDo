@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ToDo App</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
@@ -14,21 +14,21 @@
       <button type="submit">Add</button>
     </form>
     <form action="/removetask" method="POST">
-      <ul>
+      <ul class="tree">
         <% tasks.forEach(function(task, index) { %>
           <li>
             <input type="checkbox" name="check" value="<%= task.title %>">
             <%= task.title %>
-            <button type="button" onclick="showSubTaskForm('<%= task.title %>')">Add Sub-Task</button>
-            <ul>
-              <% if (task.subtasks) { %>
+            <% if (task.subtasks && task.subtasks.length > 0) { %>
+              <ul>
                 <% task.subtasks.forEach(function(subtask, subindex) { %>
                   <li>
                     <%= subtask %>
                   </li>
                 <% }); %>
-              <% } %>
-            </ul>
+              </ul>
+            <% } %>
+            <button type="button" class="plus-button" onclick="showSubTaskForm('<%= task.title %>')">+</button>
           </li>
         <% }); %>
       </ul>
