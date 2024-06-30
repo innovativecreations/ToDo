@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>ToDo List</h1>
+    <form action="/addtask" method="POST">
+      <input type="text" name="newtask" placeholder="New task" required>
+      <button type="submit">Add</button>
+    </form>
+    <form action="/removetask" method="POST">
+      <ul>
+        <% tasks.forEach(function(task, index) { %>
+          <li>
+            <input type="checkbox" name="check" value="<%= task %>">
+            <%= task %>
+          </li>
+        <% }); %>
+      </ul>
+      <button type="submit">Remove</button>
+    </form>
+  </div>
+</body>
+</html>
