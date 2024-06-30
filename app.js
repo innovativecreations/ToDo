@@ -29,6 +29,11 @@ app.post('/togglecompletion', (req, res) => {
     task.subtasks.forEach(subtask => {
       if (subtask.title === taskTitle) {
         subtask.completed = !subtask.completed;
+        if (task.subtasks.every(st => st.completed)) {
+          task.completed = true;
+        } else {
+          task.completed = false;
+        }
       }
     });
   });

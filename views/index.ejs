@@ -20,16 +20,16 @@
             <input type="hidden" name="taskTitle" value="<%= task.title %>">
             <input type="checkbox" name="completed" onchange="this.form.submit()" <%= task.completed ? 'checked' : '' %>>
           </form>
-          <%= task.title %>
+          <span class="task <%= task.completed ? 'completed' : '' %>" onclick="toggleSubtasks(this)"><%= task.title %></span>
           <% if (task.subtasks && task.subtasks.length > 0) { %>
-            <ul>
+            <ul class="subtasks">
               <% task.subtasks.forEach(function(subtask) { %>
                 <li>
                   <form action="/togglecompletion" method="POST" style="display:inline;">
                     <input type="hidden" name="taskTitle" value="<%= subtask.title %>">
                     <input type="checkbox" name="completed" onchange="this.form.submit()" <%= subtask.completed ? 'checked' : '' %>>
                   </form>
-                  <%= subtask.title %>
+                  <span class="<%= subtask.completed ? 'completed' : '' %>"><%= subtask.title %></span>
                 </li>
               <% }); %>
             </ul>
@@ -40,4 +40,22 @@
     </ul>
     <form id="subtaskForm" action="/addsubtask" method="POST" style="display:none;">
       <input type="hidden" name="maintask" id="mainTaskInput">
-      <input type="text" n
+      <input type="text" name="newsubtask" placeholder="New sub-task" required>
+      <button type="submit">Add Sub-Task</button>
+    </form>
+  </div>
+  <script>
+    function toggleSubtasks(taskElement) {
+      const subtasksList = taskElement.nextElementSibling;
+      if (subtasksList) {
+        subtasksList.style.display = subtasksList.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    function showSubTaskForm(taskTitle) {
+      document.getElementById('mainTaskInput').value = taskTitle;
+      document.getElementById('subtaskForm').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
