@@ -13,38 +13,31 @@
       <input type="text" name="newtask" placeholder="New task" required>
       <button type="submit">Add</button>
     </form>
-    <form action="/removetask" method="POST">
-      <ul class="tree">
-        <% tasks.forEach(function(task, index) { %>
-          <li>
-            <input type="checkbox" name="check" value="<%= task.title %>">
-            <%= task.title %>
-            <% if (task.subtasks && task.subtasks.length > 0) { %>
-              <ul>
-                <% task.subtasks.forEach(function(subtask, subindex) { %>
-                  <li>
-                    <%= subtask %>
-                  </li>
-                <% }); %>
-              </ul>
-            <% } %>
-            <button type="button" class="plus-button" onclick="showSubTaskForm('<%= task.title %>')">+</button>
-          </li>
-        <% }); %>
-      </ul>
-      <button type="submit">Remove</button>
-    </form>
+    <ul class="tree">
+      <% tasks.forEach(function(task) { %>
+        <li>
+          <form action="/togglecompletion" method="POST" style="display:inline;">
+            <input type="hidden" name="taskTitle" value="<%= task.title %>">
+            <input type="checkbox" name="completed" onchange="this.form.submit()" <%= task.completed ? 'checked' : '' %>>
+          </form>
+          <%= task.title %>
+          <% if (task.subtasks && task.subtasks.length > 0) { %>
+            <ul>
+              <% task.subtasks.forEach(function(subtask) { %>
+                <li>
+                  <form action="/togglecompletion" method="POST" style="display:inline;">
+                    <input type="hidden" name="taskTitle" value="<%= subtask.title %>">
+                    <input type="checkbox" name="completed" onchange="this.form.submit()" <%= subtask.completed ? 'checked' : '' %>>
+                  </form>
+                  <%= subtask.title %>
+                </li>
+              <% }); %>
+            </ul>
+          <% } %>
+          <button type="button" class="plus-button" onclick="showSubTaskForm('<%= task.title %>')">+</button>
+        </li>
+      <% }); %>
+    </ul>
     <form id="subtaskForm" action="/addsubtask" method="POST" style="display:none;">
       <input type="hidden" name="maintask" id="mainTaskInput">
-      <input type="text" name="newsubtask" placeholder="New sub-task" required>
-      <button type="submit">Add Sub-Task</button>
-    </form>
-  </div>
-  <script>
-    function showSubTaskForm(taskTitle) {
-      document.getElementById('mainTaskInput').value = taskTitle;
-      document.getElementById('subtaskForm').style.display = 'block';
-    }
-  </script>
-</body>
-</html>
+      <input type="text" n
