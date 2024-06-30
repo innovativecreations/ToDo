@@ -55,8 +55,22 @@ li {
   border-radius: 5px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
 
 li input[type="checkbox"] {
   margin-right: 1em;
+}
+
+ul ul {
+  margin-left: 2em;
+  margin-top: 0.5em;
+  background: #ddd;
+  padding: 0.5em;
+  border-radius: 5px;
+}
+
+ul ul li {
+  background: #ccc;
+  margin: 0.3em 0;
 }

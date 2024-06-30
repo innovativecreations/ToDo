@@ -17,13 +17,32 @@
       <ul>
         <% tasks.forEach(function(task, index) { %>
           <li>
-            <input type="checkbox" name="check" value="<%= task %>">
-            <%= task %>
+            <input type="checkbox" name="check" value="<%= task.title %>">
+            <%= task.title %>
+            <button type="button" onclick="showSubTaskForm('<%= task.title %>')">Add Sub-Task</button>
+            <ul>
+              <% task.subtasks.forEach(function(subtask, subindex) { %>
+                <li>
+                  <%= subtask %>
+                </li>
+              <% }); %>
+            </ul>
           </li>
         <% }); %>
       </ul>
       <button type="submit">Remove</button>
     </form>
+    <form id="subtaskForm" action="/addsubtask" method="POST" style="display:none;">
+      <input type="hidden" name="maintask" id="mainTaskInput">
+      <input type="text" name="newsubtask" placeholder="New sub-task" required>
+      <button type="submit">Add Sub-Task</button>
+    </form>
   </div>
+  <script>
+    function showSubTaskForm(taskTitle) {
+      document.getElementById('mainTaskInput').value = taskTitle;
+      document.getElementById('subtaskForm').style.display = 'block';
+    }
+  </script>
 </body>
 </html>

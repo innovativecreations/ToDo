@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/addtask', (req, res) => {
-  let task = req.body.newtask;
+  let task = { title: req.body.newtask, subtasks: [] };
   tasks.push(task);
   res.redirect('/');
 });
@@ -23,12 +23,23 @@ app.post('/addtask', (req, res) => {
 app.post('/removetask', (req, res) => {
   let completedTask = req.body.check;
   if (typeof completedTask === 'string') {
-    tasks.splice(tasks.indexOf(completedTask), 1);
+    tasks.splice(tasks.findIndex(task => task.title === completedTask), 1);
   } else if (typeof completedTask === 'object') {
     for (let i = 0; i < completedTask.length; i++) {
-      tasks.splice(tasks.indexOf(completedTask[i]), 1);
+      tasks.splice(tasks.findIndex(task => task.title === completedTask[i]), 1);
     }
   }
+  res.redirect('/');
+});
+
+app.post('/addsubtask', (req, res) => {
+  let mainTask = req.body.maintask;
+  let subtask = req.body.newsubtask;
+  tasks.forEach(task => {
+    if (task.title === mainTask) {
+      task.subtasks.push(subtask);
+    }
+  });
   res.redirect('/');
 });
 
