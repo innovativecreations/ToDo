@@ -23,11 +23,11 @@ app.post('/addtask', (req, res) => {
 app.post('/removetask', (req, res) => {
   let completedTask = req.body.check;
   if (typeof completedTask === 'string') {
-    tasks.splice(tasks.findIndex(task => task.title === completedTask), 1);
+    tasks = tasks.filter(task => task.title !== completedTask);
   } else if (typeof completedTask === 'object') {
-    for (let i = 0; i < completedTask.length; i++) {
-      tasks.splice(tasks.findIndex(task => task.title === completedTask[i]), 1);
-    }
+    completedTask.forEach(taskTitle => {
+      tasks = tasks.filter(task => task.title !== taskTitle);
+    });
   }
   res.redirect('/');
 });
